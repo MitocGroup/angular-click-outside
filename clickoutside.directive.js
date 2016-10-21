@@ -17,6 +17,7 @@
           var classList = (attr.outsideIfNot !== undefined) ? attr.outsideIfNot.split(/[ ,]+/) : [],
             fn;
           var iframes = {};
+          var newIframe = false;
 
           // add the elements id so it is not counted in the click listening
           if (attr.id !== undefined) {
@@ -24,7 +25,6 @@
           }
 
           $scope.$watch(function() {
-            let newIframe = false;
 
             $document.find('iframe').each(function() {
               if (!iframes[this.getAttribute('id')]) {
@@ -38,7 +38,8 @@
                 addListener.on('touchstart', eventHandler);
               }
 
-              addListener('click', eventHandler)
+              addListener('click', eventHandler);
+              newIframe = false;
             }
           });
 
