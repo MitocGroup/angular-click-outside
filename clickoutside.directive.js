@@ -16,8 +16,7 @@
         $timeout(function () {
           var classList = (attr.outsideIfNot !== undefined) ? attr.outsideIfNot.split(/[ ,]+/) : [],
             fn;
-          var iframes = {};
-          var newIframe = false;
+          var windowElement;
 
           // add the elements id so it is not counted in the click listening
           if (attr.id !== undefined) {
@@ -27,20 +26,13 @@
           $scope.$watch(function() {
 
             $document.find('iframe').each(function() {
-              if (!iframes[this.getAttribute('id')]) {
-                iframes[this.getAttribute('id')] = angular.element(this.contentWindow.document);
-                newIframe = true;
-              }
-            });
 
-            if (newIframe) {
               if (_hasTouch()) {
-                addListener.on('touchstart', eventHandler);
+                this.contentWindow.addEventListener('touchstart', eventHandler);
               }
 
-              addListener('click', eventHandler);
-              newIframe = false;
-            }
+              this.contentWindow.addEventListener('click', eventHandler);
+            });
           });
 
           function eventHandler(e) {
@@ -102,13 +94,11 @@
 
           // if the devices has a touchscreen, listen for this event
           if (_hasTouch()) {
-            addListener('event', eventHandler)
             $document.on('touchstart', eventHandler);
           }
 
           // still listen for the click event even if there is touch to cater for touchscreen laptops
           $document.on('click', eventHandler);
-          addListener('click', eventHandler)
 
           // when the scope is destroyed, clean up the documents event handlers as we don't want it hanging around
           $scope.$on('$destroy', function () {
@@ -118,16 +108,6 @@
 
             $document.off('click', eventHandler);
           });
-
-          function addListener(eventName, listener) {
-            for (var index in iframes) {
-              if (!iframes.hasOwnProperty(index)) {
-                continue;
-              }
-
-              iframes[index].on(eventName, listener);
-            }
-          }
 
           // private function to attempt to figure out if we are on a touch device
           function _hasTouch() {
