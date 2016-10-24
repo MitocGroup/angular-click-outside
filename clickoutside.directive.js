@@ -16,7 +16,6 @@
         $timeout(function () {
           var classList = (attr.outsideIfNot !== undefined) ? attr.outsideIfNot.split(/[ ,]+/) : [],
             fn;
-          var windowElement;
 
           // add the elements id so it is not counted in the click listening
           if (attr.id !== undefined) {
