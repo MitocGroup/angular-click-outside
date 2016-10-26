@@ -25,6 +25,9 @@
           $scope.$watch(function() {
 
             $document.find('iframe').each(function() {
+              if (this.contentWindow && this.contentWindow.addEventListener) {
+                return false;
+              }
 
               if (_hasTouch()) {
                 this.contentWindow.addEventListener('touchstart', eventHandler);
