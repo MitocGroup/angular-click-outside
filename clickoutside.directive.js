@@ -25,7 +25,7 @@
           $scope.$watch(function() {
 
             $document.find('iframe').each(function() {
-              if (this.contentWindow && this.contentWindow.addEventListener) {
+              if (!this.contentWindow || !this.contentWindow.addEventListener) {
                 return false;
               }
 
